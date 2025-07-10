@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <CppSrcDir>$(ProjectDir)cpp</CppSrcDir>
+        <CppBuildDir>$(ProjectDir)build\cpp</CppBuildDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ClCompile Include="cpp\Add.cpp" />
+    </ItemGroup>
+
+    <Target Name="BuildCppDll" BeforeTargets="BeforeBuild">
+        <MakeDir Directories="$(CppBuildDir)"/>
+        <Exec Command='cmake -S "$(CppSrcDir)" -B "$(CppBuildDir)" -DCMAKE_BUILD_TYPE=Release'/>
+        <Exec Command='cmake --build "$(CppBuildDir)" --config Release'/>
+    </Target>
+    
+    <Target Name="CopyCppDlls" AfterTargets="BuildCppDll">
+        <ItemGroup>
+            <CppDlls Include="$(CppBuildDir)\Release\*.dll"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(CppDlls)"
+              DestinationFolder="$(OutDir)" />
+    </Target>
+
+</Project>
