@@ -12,10 +12,6 @@
         <CppBuildDir>$(ProjectDir)build\cpp</CppBuildDir>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ClCompile Include="cpp\Add.cpp" />
-    </ItemGroup>
-
     <Target Name="BuildCppDll" BeforeTargets="BeforeBuild">
         <MakeDir Directories="$(CppBuildDir)"/>
         <Exec Command='cmake -S "$(CppSrcDir)" -B "$(CppBuildDir)" -DCMAKE_BUILD_TYPE=Release'/>
