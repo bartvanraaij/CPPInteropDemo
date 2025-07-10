@@ -38,6 +38,20 @@ To build and run this project, you need:
    dotnet run
    ```
 
+## How the C++ and C# Interop Works
+
+1. **C++ Source Files**: All native C++ code is located in the `cpp/` directory.
+
+2. **CMake Build Integration**: The .NET project file (`CPPInteropDemo.csproj`) is configured to automatically invoke CMake before building the C# project. This is handled by the `BuildCppDll` target, which:
+   - Runs CMake to configure the build, using the `CMakeLists.txt` file in the `cpp/` directory to generate the necessary build files in the `build/cpp` directory.
+   - Then calls CMake again to build the C++ code in Release mode, producing the DLL (e.g., `AgxCpp.dll`) in `build/cpp/Release/`.
+
+3. **Copying the DLL**: After building, the `CopyCppDlls` target copies the generated DLL(s) from the C++ build output directory into the .NET output directory (e.g., `bin/Debug/net9.0/`).
+
+4. **Loading the DLL in C#**: The C# code (in `Program.cs`) uses the `[DllImport]` attribute to declare external functions implemented in the C++ DLL. At runtime, .NET loads the native DLL and allows the managed code to call these native functions as if they were regular C# methods.
+
+This automated process ensures that any changes to the C++ code are rebuilt and made available to the C# application without manual steps.
+
 ## Project Structure
 - `cpp/` - C++ source code and CMakeLists.txt
 - `build/cpp/` - CMake build output (generated)
@@ -50,4 +64,3 @@ To build and run this project, you need:
 
 ## License
 This project is for demonstration purposes only.
-
